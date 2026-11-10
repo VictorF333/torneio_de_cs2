@@ -87,6 +87,8 @@ def cadastrar():
   equipe = equipe_entry.get()
   if (nick, equipe) in listaJogadores:
     mensagem["text"] = "Este jogador já está cadastrado."
+  elif (nick, equipe) == ("",""):
+    mensagem["text"] = "Por favor, insira os dados nas caixas de texto para poder continuar."
   else:
     mensagem["text"] = "Jogador cadastrado com sucesso!"
   mensagem.pack()
