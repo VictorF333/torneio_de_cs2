@@ -3,6 +3,7 @@ print(f'{"TORNEIO DE CS2":^30}')
 print("=" * 30)
 
 listaJogadores = []
+listaPontuacoes = []
 
 def carregarJogadores():
     arquivo = open("usuarios.txt", "r")
@@ -44,16 +45,17 @@ def cadastrarJogador():
             print("Esse código ja foi cadastrado!")
             return
     listaJogadores.append((codigo, nome, equipe))
-    
+
     arquivo = open("usuarios.txt", "a")
     arquivo.write(codigo + ";" + nome + ";" + equipe + "\n")
     arquivo.close()
     print("Jogador cadastrado com sucesso!")
 
+
 def listarJogadores():
-    print("=" * 20)
-    print("LISTA DE JOGADORES")
-    print("=" * 20)
+    print("=" * 40)
+    print(f"{"LISTA DE JOGADORES":^40}")
+    print("=" * 40)
 
     if len(listaJogadores) == 0:
         print("Nenhum jogador cadastrado.")
@@ -62,12 +64,12 @@ def listarJogadores():
         for jogador in listaJogadores:
             print(f"{jogador[0]},{jogador[1]},{jogador[2]}")
             
-    print("-"*20)
+    print("-"*40)
 
 def buscarJogador():
-    print("=" * 20)
+    print("=" * 40)
     print("BUSCAR JOGADOR")
-    print("=" * 20)
+    print("=" * 40)
     
     busca = input("Digite o nome do jogador: ").strip().lower()
     encontrado = False
@@ -87,8 +89,24 @@ def buscarJogador():
     if not encontrado:
         print("Jogador não encontrado.")
 
+def verEquipes():
+    equipes = []
+    for c in range(0, len(listaJogadores)):
+        if listaJogadores[c][2] not in equipes:
+            equipes.append((100+c, listaJogadores[c][2]))
+
+    print("-----------------------")
+    print("codigo     Equipe")
+    print("-----------------------")
+    for a, b in equipes:
+        print(f"{a:<10} {b}")
+    print("-----------------------")
+
 def lancarPontuacao():
-    #continuar
+    codigo = int(input("O código da equipe: "))
+    rodada = int(input("Rodada: "))
+    valor = int(input("Pontuação: "))
+    
     pass
 
 carregarJogadores()
@@ -98,9 +116,10 @@ while opcao != "0":
     print("1 - Cadastrar jogador")
     print("2 - Listar jogadores")
     print("3 - Buscar jogador")
-    print("4 - Lançar pontuação")
-    print("5 - Ver pontuações de um jogador")
-    print("6 - Relatórios")
+    print("4 - Ver Equipes")
+    print("5 - Lançar pontuação")
+    print("6 - Ver pontuações de um jogador")
+    print("7 - Relatórios")
     print("0 - Sair")
 
     opcao = input("Sua opção: ")
@@ -113,6 +132,9 @@ while opcao != "0":
 
     elif opcao == "3":
         buscarJogador()
+
+    elif opcao == "4":
+        verEquipes()
 
 if opcao == "0":
     print("Sistema encerrado!")
