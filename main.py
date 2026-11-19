@@ -1,110 +1,172 @@
-import tkinter as tk
+print(f'{"TORNEIO DE CS2":^30}')
 
-# metadados da janela
+listaJogadores = []
 
-janela = tk.Tk()
-janela.title("Torneio de CS2")
-janela.geometry("500x400")
+def carregarJogadores():
+    arquivo = open("usuarios.txt", "r")
+    linhas = arquivo.readlines()
+    arquivo.close()
 
-# definição dos frames
+    for linha in linhas:
+        dados = linha.strip().split(";")
 
-listaJogadores = [("victor", "calanguinhos")]
+        if len(dados) == 3:
+            codigo = dados[0]
+            nome = dados[1]
+            equipe = dados[2]
+            listaJogadores.append((int(codigo), nome, equipe))
 
-menu = tk.Frame(janela)
-menu.pack()
-frame_cadastroJogador = tk.Frame(janela)
-frame_listaJogadores = tk.Frame(janela)
-frame_buscaJogador = tk.Frame(janela)
-frame_lancarPontuacoes = tk.Frame(janela)
-frame_verPontuacoes = tk.Frame(janela)
-frame_relatorios = tk.Frame(janela)
+def cadastrarJogador():
+    print("=" * 20)
+    print("CADASTRAR JOGADOR")
+    print("=" * 20)
 
-# Menu inicial e botões funcionais
+    nome = input("Nome: ").strip().title()
+    equipe = input("Equipe: ").strip().title()
 
-tk.Label(menu, text="=== Torneio IFRN de CS2 ===").pack()
-tk.Label(menu, text="Bem vindo ao programa do Torneio Oficial de CS2 do IFRN!").pack()
+    if nome == "":
+        print("O nome nao pode ficar vazio!")
+        return
 
+    if equipe == "":
+        print("O jogador nao pode ficar sem equipe!")
+        return
 
-def cadastrar_jogador():
-  menu.pack_forget()
-  frame_cadastroJogador.pack()
-  botao_voltar.pack()
+    for jogador in listaJogadores:
+        if nome in jogador and equipe in jogador:
+            print("Este jogador já foi cadastrado.")
+            return
 
-def listar_jogadores():
-  menu.pack_forget()
-  frame_listaJogadores.pack()
-  botao_voltar.pack()
+    codigo = 0
+    for jogador in listaJogadores:
+        if jogador[0] > codigo:
+            codigo = jogador[0]
+    codigo += 1
 
-def buscar_jogador():
-  menu.pack_forget()
-  frame_buscaJogador.pack()
-  botao_voltar.pack()
+    listaJogadores.append((codigo, nome, equipe))
 
-def lancar_pontuacoes():
-  menu.pack_forget()
-  frame_lancarPontuacoes.pack()
-  botao_voltar.pack()
+    arquivo = open("usuarios.txt", "a")
+    arquivo.write(str(codigo) + ";" + nome + ";" + equipe + "\n")
+    arquivo.close()
+    print("Jogador cadastrado com sucesso!")
 
-def ver_pontuacoes_jogador():
-  menu.pack_forget()
-  frame_verPontuacoes.pack()
-  botao_voltar.pack()
+def listarJogadores():
+    print("=" * 40)
+    print(f'{"LISTA DE JOGADORES":^40}')
+    print("=" * 40)
+
+    if len(listaJogadores) == 0:
+        print("Nenhum jogador cadastrado.")
+
+    else:
+        print("Código         Nome           Equipe")
+        print("-"*40)
+        for jogador in listaJogadores:
+            print(f"{jogador[0]:<15}{jogador[1]:<15}{jogador[2]}")
+
+    print("-"*40)
+
+def buscarJogador():
+    print("=" * 40)
+    print("BUSCAR JOGADOR")
+    print("=" * 40)
+
+    busca = input("Digite o nome do jogador: ").strip().lower()
+    encontrado = False
+
+    if busca == "":
+        print("Digite um nome para buscar.")
+        return
+
+    for jogador in listaJogadores:
+        if busca in jogador[1].lower():
+            print("Dados sobre o jogador:")
+            print(f"Código: {jogador[0]}")
+            print(f"Nome: {jogador[1]}")
+            print(f"Equipe: {jogador[2]}")
+            encontrado = True
+
+    if not encontrado:
+        print("Jogador não encontrado.")
+
+def verEquipes():
+    equipes = {}
+    for c in range(0, len(listaJogadores)):
+        if listaJogadores[c][2] not in equipes.values():
+            equipes[str(100+c)] = listaJogadores[c][2]
+
+    print("-----------------------")
+    print("codigo     Equipe")
+    print("-----------------------")
+    for a, b in equipes.items():
+        print(f"{a:<10} {b}")
+
+def lancarPontuacao():
+    print("=" * 20)
+    print(f'{"Lançar Pontuação":^20}')
+    print("=" * 20)
+
+    codigo = input("O código da equipe: ").strip()
+    rodada = input("Rodada: ").strip()
+    valor = input("Pontuação: ").strip()
+
+    if codigo == '' or rodada == '' or valor == '':
+        print("Campo obrigatório, adicione as informações!")
+        return
+
+    arquivo = open("pontuacao.txt", "a")
+    arquivo.write(codigo + ";" + rodada + ";" + valor + "\n")
+    arquivo.close()
+    print("Pontuação cadastrada com sucesso!")
+
+    codigo = int(codigo)
+    rodada = int(rodada)
+    valor = int(valor)
+
+def verPontuacoes():
+    print("Em construção")
 
 def relatorios():
-  menu.pack_forget()
-  frame_relatorios.pack()
-  botao_voltar.pack()
-
-def voltar_tela_anterior():
-  botao_voltar.pack_forget()
-  listaFremes = [frame_cadastroJogador,frame_listaJogadores,frame_buscaJogador,frame_lancarPontuacoes,frame_verPontuacoes,frame_relatorios]
-  for a in listaFremes:
-    a.pack_forget()
-  menu.pack()
+    print("Em construção")
 
 
-tk.Button(menu, text="Cadastrar jogador", command=cadastrar_jogador).pack()
-tk.Button(menu, text="Listar jogadores", command=listar_jogadores).pack()
-tk.Button(menu, text="Buscar jogador", command=buscar_jogador).pack()
-tk.Button(menu, text="Lançar pontuação", command=lancar_pontuacoes).pack()
-tk.Button(menu, text="Ver pontuações de um jogador", command=ver_pontuacoes_jogador).pack()
-tk.Button(menu, text="Relatórios", command=relatorios).pack()
-botao_voltar = tk.Button(janela, text="Voltar ao menu", command=voltar_tela_anterior)
+carregarJogadores()
+opcao = ""
 
-# Cadastrar Jogador
+while opcao != "0":
+    print("="*30)
+    print("1 - Cadastrar jogador")
+    print("2 - Listar jogadores")
+    print("3 - Buscar jogador")
+    print("4 - Ver Equipes")
+    print("5 - Lançar pontuação")
+    print("6 - Ver pontuações de uma equipe")
+    print("7 - Relatórios")
+    print("0 - Sair")
+    print("="*30)
 
-tk.Label(frame_cadastroJogador, text="Cadastrar Jogador").pack()
-nick_entry = tk.Entry(frame_cadastroJogador)
-equipe_entry = tk.Entry(frame_cadastroJogador)
-tk.Label(frame_cadastroJogador, text="Nome do jogador").pack()
-nick_entry.pack()
-tk.Label(frame_cadastroJogador, text="Equipe ao qual pertence").pack()
-equipe_entry.pack()
+    opcao = input("Sua opção: ")
 
+    if opcao == "1":
+        cadastrarJogador()
 
-def cadastrar():
-  nick = nick_entry.get()
-  equipe = equipe_entry.get()
-  if (nick, equipe) in listaJogadores:
-    mensagem["text"] = "Este jogador já está cadastrado."
-  elif (nick, equipe) == ("",""):
-    mensagem["text"] = "Por favor, insira os dados nas caixas de texto para poder continuar."
-  else:
-    mensagem["text"] = "Jogador cadastrado com sucesso!"
-  mensagem.pack()
+    elif opcao == "2":
+        listarJogadores()
 
-mensagem = tk.Label(frame_cadastroJogador, text="")
-tk.Button(frame_cadastroJogador, text="Cadastrar", command=cadastrar).pack()
+    elif opcao == "3":
+        buscarJogador()
 
-# Listar Jogadores
+    elif opcao == "4":
+        verEquipes()
 
-# Buscar Jogadores
+    elif opcao == "5":
+        lancarPontuacao()
 
-# Lanças Pontuações
+    elif opcao == "6":
+        verPontuacoes()
 
-# Ver Pontuações de um jogador
+    elif opcao == "7":
+        relatorios()
 
-# Relatórios
-
-
-janela.mainloop()
+if opcao == "0":
+    print("Sistema encerrado!")
