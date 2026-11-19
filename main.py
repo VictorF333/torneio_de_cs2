@@ -59,7 +59,7 @@ def listarJogadores():
         print("Nenhum jogador cadastrado.")
 
     else:
-        print("Código         Nome           Equipe")
+        print("Equipe         Nome           Equipe")
         print("-"*40)
         for jogador in listaJogadores:
             print(f"{jogador[0]:<15}{jogador[1]:<15}{jogador[2]}")
